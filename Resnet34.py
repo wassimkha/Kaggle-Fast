@@ -41,25 +41,25 @@ Random = transform.RandomApply(List_random, p = 0.75)
 Real_list = [ ColorJitter, RandomRotation, ColorJitter, RandomRotation]
 #Importing a pretrained model
 resnet34 = models.resnet34(pretrained=True)
-resnet34.fc = nn.Linear(51200,2)
+resnet34.fc = nn.Linear(512,2)
 #Importing the key/answer whales
 Pic = []
 Pic_Answer = []
 #Seting up the training
 iters = 0
-mini_batch = 0
 criterion = nn.CrossEntropyLoss()
-learning_rate = 0.0000001
+learning_rate = 0.00000000001
 optimizer = torch.optim.SGD(resnet34.parameters(), lr=learning_rate)
 # Set model to training mode
 resnet34 = resnet34.train()
 #Iterating
-# plt.ion()
-# plt.xlabel("Iterations")
-# plt.ylabel("Loss")
-# axis = plt.gca()
-# axis.set_ylim([0,20])
-# plt.show()
+#Ploting the loss
+plt.ion()
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+axis = plt.gca()
+axis.set_ylim([0,1])
+plt.show()
 path = "./Data/Images/Train"
 dirs = os.listdir( path )
 for j, i in enumerate(dirs):
@@ -80,9 +80,9 @@ for j, i in enumerate(dirs):
     Pic.append(img_base)
     Answer = dict[str(Tag)]
     if Answer != 3:
-        Tag = 0
+        Answer = 0
     if Answer == 3:
-        Tag = 1
+        Answer = 1
     Pic_Answer.append(Answer)
     if len(Pic) >= 64:
         Pic = torch.stack(Pic)
@@ -90,16 +90,16 @@ for j, i in enumerate(dirs):
         optimizer.zero_grad()
         outputs = resnet34(Pic)
         loss = criterion(outputs, Pic_Answer)
-
-        # plt.plot(mini_batch,loss.item(), 'X')
-        # mini_batch += 1
-        # plt.draw()
-        # plt.pause(0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000001)
+        print("Iters: {} || Loss: {}".format(iters,loss.item()))
+        #Ploting the loss
+        plt.plot(iters,loss.item(), 'X')
+        plt.draw()
+        plt.pause(0.0001)
         loss.backward()
         optimizer.step()
         Pic = []
         Pic_Answer = []
-    if iters % 20 == 0:
-        torch.save(resnet18.state_dict(), 'resnet152.pkl')
-        print("Iters: {} || Loss: {}".format(iters,loss.item()))
-torch.save(resnet18.state_dict(), 'resnet34.pkl')
+    if iters % 500 == 0:
+        torch.save(resnet34.state_dict(), 'resnet34.pkl')
+
+torch.save(resnet34.state_dict(), 'resnet34.pkl')
