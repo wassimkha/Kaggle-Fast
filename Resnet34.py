@@ -50,7 +50,7 @@ iters = 0
 mini_batch = 0
 criterion = nn.CrossEntropyLoss()
 learning_rate = 0.0000001
-optimizer = torch.optim.SGD(resnet18.parameters(), lr=learning_rate)
+optimizer = torch.optim.SGD(resnet34.parameters(), lr=learning_rate)
 # Set model to training mode
 resnet34 = resnet34.train()
 #Iterating
