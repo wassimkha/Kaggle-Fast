@@ -69,6 +69,6 @@ for j, i in enumerate(dirs):
         total += 1
     else:
         total += 1
-    if total % 10 == 0:
+    if total % 500 == 0:
         accuracy = float(correct) / total
         print("Iteration: {} || Accuracy: {}%".format(total,accuracy ))

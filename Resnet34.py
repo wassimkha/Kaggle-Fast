@@ -48,7 +48,7 @@ Pic_Answer = []
 #Seting up the training
 iters = 0
 criterion = nn.CrossEntropyLoss()
-learning_rate = 0.00000000001
+learning_rate = 0.01
 optimizer = torch.optim.SGD(resnet34.parameters(), lr=learning_rate)
 # Set model to training mode
 resnet34 = resnet34.train()
