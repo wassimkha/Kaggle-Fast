@@ -81,25 +81,13 @@ for j, i in enumerate(dirs):
     #Open the image
     img = Image.open("./Data/Images/Train/" + str(i))
     #Adding layer to one layer image
-    img = Resize(Gray(img))
+    img = Gray(img)
     #Resize the image
     img_a = Norm(img)
     #Appending the image and the answer to the lists
     Pic.append(img_a)
     Pic_Answer.append(Answer)
 
-    #Find out how many Augmentation to make
-    Aug_index = Names.index(Tag)
-    Aug_occurences = Occurences[Aug_index]
-    n = (20 - Aug_occurences)
-    o = math.ceil(n/6)
-    if o > 0:
-        for i in range(o):
-            for s in List:
-                img_b = s(img)
-                img_b = Norm(img_b)
-                Pic.append(img_b)
-                Pic_Answer.append(Answer)
 
     if len(Pic) >= 64:
         Pic = torch.stack(Pic)
