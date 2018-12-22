@@ -47,25 +47,26 @@ Resize = transform.Resize((224,224))
 List = [CenterCrop, ColorJitter, RandomCrop, RandomRotation, Hflip, Same]
 
 #Importing a pretrained model
-resnet34 = models.resnet34(pretrained=False)
-resnet34.fc = nn.Linear(512,2)
+resnet34 = models.resnet34(pretrained=True)
+resnet34.fc = nn.Linear(512,5005)
 #Importing the key/answer whales
 Pic = []
 Pic_Answer = []
 #Seting up the training
+batch = 0
 criterion = nn.CrossEntropyLoss()
-learning_rate = 0.01
-optimizer = torch.optim.SGD(resnet34.parameters(), lr=learning_rate)
+learning_rate = 0.1
+optimizer = torch.optim.SGD(resnet34.parameters(), lr=learning_rate, weight_decay=0.1)
 # Set model to training mode
 resnet34 = resnet34.train()
 #Iterating
 #Ploting the loss
-# plt.ion()
-# plt.xlabel("Iterations")
-# plt.ylabel("Loss")
-# axis = plt.gca()
-# axis.set_ylim([0,1])
-# plt.show()
+plt.ion()
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+axis = plt.gca()
+axis.set_ylim([0,13.5])
+plt.show()
 path = "./Data/Images/Train"
 dirs = os.listdir( path )
 for j, i in enumerate(dirs):
@@ -100,19 +101,20 @@ for j, i in enumerate(dirs):
                 Pic.append(img_b)
                 Pic_Answer.append(Answer)
 
-    if j >= 10:
+    if len(Pic) >= 64:
         Pic = torch.stack(Pic)
         Pic_Answer = torch.LongTensor(Pic_Answer)
         optimizer.zero_grad()
         outputs = resnet34(Pic)
         loss = criterion(outputs, Pic_Answer)
-        print("Iters: {} || Loss: {}".format(j,loss.item()))
+        print("Iters: {} || Loss: {} || Output: {}".format(j,loss.item(),outputs.shape))
         #Ploting the loss
-        # plt.plot(iters,loss.item(), 'X')
-        # plt.draw()
-        # plt.pause(0.0001)
-        # loss.backward()
+        plt.plot(batch,loss.item(), 'X')
+        plt.draw()
+        plt.pause(0.0001)
+        loss.backward()
         optimizer.step()
+        batch += 1
         Pic = []
         Pic_Answer = []
     if j % 500 == 0:

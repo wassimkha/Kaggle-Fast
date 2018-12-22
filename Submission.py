@@ -11,12 +11,12 @@ import csv
 
 
 #Transform the data
-Norm = transform.Compose([transform.Resize((334,334)),transform.ToTensor(), transform.Normalize(mean=[0.485, 0.456, 0.406],
+Norm = transform.Compose([transform.Resize((224,224)),transform.ToTensor(), transform.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])])
 Gray = transform.Grayscale(num_output_channels=3)
 To_tensor = transform.ToTensor()
 #Get the dict
-Landmarks = (pd.read_csv("../train.csv")).values
+Landmarks = (pd.read_csv("./Data/train.csv")).values
 Pictures = [i for i in Landmarks[:,0]]
 Tags = [i for i in Landmarks[:,1]]
 dict = {}
@@ -28,16 +28,17 @@ for i in Tags:
         dict[i] = count
         count += 1
 #open the submission
-Submission = (pd.read_csv("../sample_submission.csv")).values
+Submission = (pd.read_csv("./Data/sample_submission.csv")).values
 #Prepare the model
-resnet18 = models.resnet18(pretrained=True)
-resnet18.fc = nn.Linear(12800,5005)
+resnet18 = models.resnet34(pretrained=False)
+resnet18.fc = nn.Linear(512,5005)
+resnet18.load_state_dict(torch.load('resnet34.pkl'))
 resnet18 = resnet18.eval()
-resnet18.load_state_dict(torch.load('../Saved_models/No_aug/resnet18.pkl'))
+
 #Saving
 Pic = []
 Prob = []
-path = "../Test"
+path = "./Data/Images/Test"
 dirs = os.listdir( path )
 for j, i in enumerate(dirs):
 
@@ -45,14 +46,12 @@ for j, i in enumerate(dirs):
     #predict = Submission[j,1]
     Submission[j,0] = str(i)
     #Open the image
-    img = Image.open("../Test/" + str(i))
+    img = Image.open("./Data/Images/Test/" + str(i))
     #Adding layer to one layer image
-    x = To_tensor(img)
-    if x.size()[0] == 1:
-        img = Gray(img)
+    img = Gray(img)
     #Resize the image
     img = Norm(img)
-    img = img.view(1,3,334,334)
+    img = img.view(1,3,224,224)
     output = resnet18(img)
     index = torch.topk(output,5)
     index = index[1]
@@ -68,4 +67,4 @@ for j, i in enumerate(dirs):
         print(j)
 
 foo = pd.DataFrame(Submission)
-foo.to_csv("../Sub_No_aug.csv")
+foo.to_csv("./Sub_Test.csv")
