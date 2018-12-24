@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 import numpy as np
 from PIL import Image
 import os, sys
@@ -8,7 +9,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import torchvision.models as models
 import torch.nn as nn
-import pickle
 import math
 
 # Transformn the data
@@ -24,14 +24,12 @@ for i in Tags:
         dict[i] = count
         count += 1
 
-
 Norm = transform.Compose([transform.Resize((224,224)),transform.ToTensor(), transform.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])])
 To_tensor = transform.ToTensor()
 Resize = transform.Resize((224,224))
 To_pil = transform.ToPILImage()
-
-#Importing a pretrained model
+Importing a pretrained model
 resnet101 = models.resnet101(pretrained=True)
 resnet101.fc = nn.Linear(512,5004)
 # Set model to training mode
@@ -44,16 +42,16 @@ criterion = nn.CrossEntropyLoss()
 learning_rate = 0.01
 optimizer = torch.optim.SGD(resnet101.parameters(), lr=learning_rate, weight_decay=0.1)
 
-#Iterating
-#Ploting the loss
+# Iterating
+# Ploting the loss
 # plt.ion()
 # plt.xlabel("Iterations")
 # plt.ylabel("Loss")
 # axis = plt.gca()
 # axis.set_ylim([0,13.5])
 # plt.show()
-# path = "./Data/Images/Augmen"
-# dirs = os.listdir( path )
+path = "./Data/Images/Augmentation"
+dirs = os.listdir( path )
 for j, i in enumerate(Pictures):
     #Finding the index of an image
     index = Pictures.index(str(i))
