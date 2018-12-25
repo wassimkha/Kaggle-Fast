@@ -30,9 +30,9 @@ for i in Tags:
 #open the submission
 Submission = (pd.read_csv("./Data/sample_submission.csv")).values
 #Prepare the model
-resnet18 = models.resnet34(pretrained=False)
-resnet18.fc = nn.Linear(512,5005)
-resnet18.load_state_dict(torch.load('resnet34.pkl'))
+resnet18 = models.resnet101(pretrained=False)
+resnet18.fc = nn.Linear(2048,5004)
+resnet18.load_state_dict(torch.load('resnet101.pkl'))
 resnet18 = resnet18.eval()
 
 #Saving
@@ -67,4 +67,4 @@ for j, i in enumerate(dirs):
         print(j)
 
 foo = pd.DataFrame(Submission)
-foo.to_csv("./Sub_Test.csv")
+foo.to_csv("./101Test.csv")
