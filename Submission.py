@@ -16,7 +16,7 @@ Norm = transform.Compose([transform.Resize((224,224)),transform.ToTensor(), tran
 Gray = transform.Grayscale(num_output_channels=3)
 To_tensor = transform.ToTensor()
 #Get the dict
-Landmarks = (pd.read_csv("./Data/train.csv")).values
+Landmarks = (pd.read_csv("./Data/New_Aug.csv")).values
 Pictures = [i for i in Landmarks[:,0]]
 Tags = [i for i in Landmarks[:,1]]
 dict = {}
