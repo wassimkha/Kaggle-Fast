@@ -7,8 +7,6 @@ import torchvision
 import torchvision.transforms as transform
 import matplotlib.pyplot as plt
 import pandas as pd
-import torchvision.models as models
-import torch.nn as nn
 import math
 
 # Transformn the data
@@ -23,17 +21,13 @@ for i in Tags:
     else:
         dict[i] = count
         count += 1
+print(dict)
+foo = input()
 
-Norm = transform.Compose([transform.Resize((224,224)),transform.ToTensor(), transform.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])])
-To_tensor = transform.ToTensor()
-Resize = transform.Resize((224,224))
-To_pil = transform.ToPILImage()
 #Importing a pretrained model
-resnet101 = models.resnet101(pretrained=True)
-resnet101.fc = nn.Linear(2048,5004)
+
 # Set model to training mode
-resnet101 = resnet101.train()
+
 # Importing the key/answer whales
 Pic = []
 Pic_Answer = []
