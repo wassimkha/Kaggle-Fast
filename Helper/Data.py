@@ -50,10 +50,10 @@ class Whales(Dataset):
         return sample
 Whales_dataset = Whales(csv_file='Data/NEW_Train.csv',
                                     root_dir='Data/Images/Augmentation/')
-dataloader = DataLoader(Whales_dataset, batch_size=64,
+dataloader = DataLoader(Whales_dataset, batch_size=32,
                         shuffle=True)
 Split = len(Whales_dataset)
 
-Cross_validation, _ = torch.utils.data.random_split(Whales_dataset, (10000, Split - 10000))
-dataloader_CV = DataLoader(Cross_validation,batch_size=64,
+Cross_validation, _ = torch.utils.data.random_split(Whales_dataset, (2000, Split - 2000))
+dataloader_CV = DataLoader(Cross_validation,batch_size=32,
                         shuffle=True)
