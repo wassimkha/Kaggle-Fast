@@ -30,11 +30,11 @@ for i in Tags:
 #open the submission
 Submission = (pd.read_csv("./Data/sample_submission.csv")).values
 #Prepare the model
-resnet18 = models.resnet101(pretrained=False)
-resnet18.fc = nn.Linear(2048,5004)
-resnet18.load_state_dict(torch.load('resnet101.pkl'))
-resnet18 = resnet18.eval()
-
+resnet152 = models.resnet152(pretrained=False)
+resnet152.fc = nn.Linear(2048,5004) # to change
+resnet152.load_state_dict(torch.load('resnet152.pkl'))
+resnet152 = resnet152.eval()
+resnet152 = resnet152.cuda()
 #Saving
 Pic = []
 Prob = []
@@ -52,7 +52,8 @@ for j, i in enumerate(dirs):
     #Resize the image
     img = Norm(img)
     img = img.view(1,3,224,224)
-    output = resnet18(img)
+    img = img.cuda()
+    output = resnet152(img)
     index = torch.topk(output,5)
     index = index[1]
     index = index.numpy()
@@ -67,4 +68,4 @@ for j, i in enumerate(dirs):
         print(j)
 
 foo = pd.DataFrame(Submission)
-foo.to_csv("./101Test.csv")
+foo.to_csv("./resnet152_submition.csv")
